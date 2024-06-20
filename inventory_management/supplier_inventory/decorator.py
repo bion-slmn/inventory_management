@@ -3,6 +3,7 @@ from django.http import Http404
 from rest_framework.response import Response
 from rest_framework import status
 
+
 def handle_exceptions(view_func):
     @wraps(view_func)
     def _wrapped_view(*args, **kwargs):

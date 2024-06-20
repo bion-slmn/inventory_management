@@ -2,6 +2,7 @@ from django.test import TestCase
 from supplier_inventory.models import Item, Supplier
 import uuid
 
+
 class ItemSupplierModelTests(TestCase):
     def setUp(self):
         self.item1 = Item.objects.create(
@@ -10,9 +11,13 @@ class ItemSupplierModelTests(TestCase):
             name="Item2", description="Description2", price="200.00")
 
         self.supplier1 = Supplier.objects.create(
-            name="Supplier1", phone_number="1234567890", email="supplier1@example.com")
+            name="Supplier1",
+            phone_number="1234567890",
+            email="supplier1@example.com")
         self.supplier2 = Supplier.objects.create(
-            name="Supplier2", phone_number="0987654321", email="supplier2@example.com")
+            name="Supplier2",
+            phone_number="0987654321",
+            email="supplier2@example.com")
 
     def test_create_item(self):
         item = Item.objects.create(
@@ -25,7 +30,9 @@ class ItemSupplierModelTests(TestCase):
 
     def test_create_supplier(self):
         supplier = Supplier.objects.create(
-            name="NewSupplier", phone_number="1111111111", email="newsupplier@example.com")
+            name="NewSupplier",
+            phone_number="1111111111",
+            email="newsupplier@example.com")
         self.assertEqual(supplier.name, "NewSupplier")
         self.assertEqual(supplier.phone_number, "1111111111")
         self.assertEqual(supplier.email, "newsupplier@example.com")
@@ -45,7 +52,7 @@ class ItemSupplierModelTests(TestCase):
         self.assertEqual(self.supplier1.items.count(), 2)
         self.assertIn(self.item1, self.supplier1.items.all())
         self.assertIn(self.item2, self.supplier1.items.all())
-        
+
         self.supplier2.items.add(self.item2)
         self.assertEqual(self.supplier2.items.count(), 1)
         self.assertIn(self.item2, self.supplier2.items.all())
@@ -53,5 +60,7 @@ class ItemSupplierModelTests(TestCase):
 
     def test_supplier_with_no_items(self):
         supplier = Supplier.objects.create(
-            name="Supplier3", phone_number="2222222222", email="supplier3@example.com")
+            name="Supplier3",
+            phone_number="2222222222",
+            email="supplier3@example.com")
         self.assertEqual(supplier.items.count(), 0)

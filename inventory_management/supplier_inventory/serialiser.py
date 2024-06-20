@@ -1,10 +1,11 @@
 from rest_framework import serializers
-from.models import Item, Supplier
+from .models import Item, Supplier
 
 
 class ItemSerialiser(serializers.ModelSerializer):
     id = serializers.UUIDField(read_only=True)
-    created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
+    created_at = serializers.DateTimeField(
+        format="%Y-%m-%d %H:%M:%S", read_only=True)
 
     class Meta:
         model = Item

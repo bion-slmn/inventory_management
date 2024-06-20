@@ -17,6 +17,7 @@ class BaseModel(models.Model):
     class Meta:
         abstract = True
 
+
 class Item(BaseModel):
     """
     A model representing an item in the inventory.
@@ -27,6 +28,7 @@ class Item(BaseModel):
 
     def __str__(self) -> str:
         return f'{self.name} at {self.price} '
+
 
 class Supplier(BaseModel):
     """

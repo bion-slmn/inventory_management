@@ -9,7 +9,6 @@ from django.db.models import Model
 from .decorator import handle_exceptions
 
 
-
 class ApiMethodMixin:
     def update(self, request: HttpRequest, obj: Type[Model]) -> str:
         """
@@ -20,7 +19,7 @@ class ApiMethodMixin:
             obj: The object to be updated.
 
         Returns:
-            str: Returns None if the object was updated successfully, 
+            str: Returns None if the object was updated successfully,
             otherwise returns an error message.
 
         Raises:
@@ -41,13 +40,16 @@ class ApiMethodMixin:
             updated = True
 
         return None if updated else {'error': "Nothing to update"}
-    
-    def update_object_attributes(self, object_data: dict, obj: Type[Model]) -> bool:
+
+    def update_object_attributes(
+            self,
+            object_data: dict,
+            obj: Type[Model]) -> bool:
         """
         Updates the attributes of the given object based on the data provided.
 
         Args:
-            object_data (dict): A dictionary containing attribute 
+            object_data (dict): A dictionary containing attribute
             names and values to update.
             obj (type[Model]): The object to be updated.
 
@@ -60,7 +62,6 @@ class ApiMethodMixin:
                 setattr(obj, key, value)
                 updated = True
         return updated
-    
 
     def check_ids(self, object_ids: List[int], obj_class: Type[Model]) -> int:
         """
@@ -73,8 +74,9 @@ class ApiMethodMixin:
         Returns:
             bool: True if all object IDs are present, False otherwise.
         """
-        return obj_class.objects.filter(id__in=object_ids).count() == len(object_ids)
-      
+        return obj_class.objects.filter(
+            id__in=object_ids).count() == len(object_ids)
+
 
 class ItemView(APIView, ApiMethodMixin):
     """
@@ -94,7 +96,8 @@ class ItemView(APIView, ApiMethodMixin):
             request (HttpRequest): The HTTP request object.
 
         Returns:
-            Response: JSON response containing item details and associated suppliers
+            Response: JSON response containing
+            item details and associated suppliers
             or all items if no specific item ID is provided.
         Raises:
             Exception: If an error occurs during the retrieval process.
@@ -110,7 +113,8 @@ class ItemView(APIView, ApiMethodMixin):
             Item.objects.prefetch_related('suppliers'), id=item_id)
 
         item_json = ItemSerialiser(item).data
-        all_suppliers = item.suppliers.all().values('id', 'name', 'phone_number')
+        all_suppliers = item.suppliers.all().values(
+            'id', 'name', 'phone_number')
         combined_data = {'item': item_json, 'suppliers': all_suppliers}
         return Response(combined_data)
 
@@ -163,7 +167,7 @@ class ItemView(APIView, ApiMethodMixin):
             Raises:
                 Exception: If an error occurs during the update process.
         """
-        
+
         item = get_object_or_404(Item, id=item_id)
         if result := self.update(request, item):
             return Response(result, 400)
@@ -171,7 +175,6 @@ class ItemView(APIView, ApiMethodMixin):
         item.save()
         return Response(f'items_id: {item.id}, {str(item)} updated')
 
-        
     @handle_exceptions
     def delete(self, request: HttpRequest, item_id: str) -> Response:
         """
@@ -186,8 +189,7 @@ class ItemView(APIView, ApiMethodMixin):
             Raises:
                 Exception: If an error occurs during the deletion process.
         """
-       
-            
+
         item = get_object_or_404(Item, id=item_id)
         item_details = str(item)
         item.delete()
@@ -202,17 +204,18 @@ class SupplierView(APIView, ApiMethodMixin):
     related_model = Item
     model = Supplier
     related_name = 'items'
-  
+
     @handle_exceptions
     def get(self, request: HttpRequest) -> Response:
         """
         Handle GET requests to retrieve supplier details and associated items.
-        
+
         Args:
             request (HttpRequest): The HTTP request object.
 
         Returns:
-            Response: JSON response containing supplier details and associated items
+            Response: JSON response containing supplier
+            details and associated items
             or all suppliers if no specific supplier ID is provided.
             Raises:
                 Exception: If an error occurs during the retrieval process.
@@ -227,7 +230,7 @@ class SupplierView(APIView, ApiMethodMixin):
             'id', 'name', 'phone_number', 'email'
         )
         return Response(all_suppliers)
-        
+
     @handle_exceptions
     def post(self, request: HttpRequest) -> Response:
         """
@@ -249,7 +252,7 @@ class SupplierView(APIView, ApiMethodMixin):
 
         supplier = Supplier.objects.create(
             name=name, phone_number=phone_number, email=email)
-        
+
         if items_ids:
             if isinstance(items_ids, str):
                 items_ids = items_ids.split(', ')
@@ -258,8 +261,6 @@ class SupplierView(APIView, ApiMethodMixin):
             supplier.items.add(*items_ids)
         serialiser = SupplierSerialiser(supplier)
         return Response(serialiser.data, 201)
-
-        
 
     @handle_exceptions
     def put(self, request: HttpRequest, supplier_id: str) -> Response:
@@ -280,10 +281,7 @@ class SupplierView(APIView, ApiMethodMixin):
         supplier = get_object_or_404(Supplier, id=supplier_id)
         if result := self.update(request, supplier):
             return Response(result, 400)
-        
+
         supplier.save()
         serialiser = SupplierSerialiser(supplier)
         return Response(serialiser.data)
-        
-
-

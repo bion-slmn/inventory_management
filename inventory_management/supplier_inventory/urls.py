@@ -10,6 +10,8 @@ urlpatterns = [
 
     path('view-suppliers/', SupplierView.as_view(), name='view_suppliers'),
     path('add-supplier/', SupplierView.as_view(), name='add_supplier'),
-    path('update-supplier/<str:supplier_id>', SupplierView.as_view(), name='update_supplier'),
-    path('delete-supplier/<str:supplier_id>', SupplierView.as_view(), name='delete_supplier'),
+    path(
+        'update-supplier/<str:supplier_id>', SupplierView.as_view(), name='update_supplier'),
+    path(
+        'delete-supplier/<str:supplier_id>', SupplierView.as_view(), name='delete_supplier'),
 ]

@@ -113,7 +113,6 @@ class ItemViewTests(TestCase):
         supplier3 = Supplier.objects.create(name="Supplier2", phone_number="0987654321")
         payload = {'name': 'Phone', 'description': 'New phone', 'price': 150, 'suppliers': [supplier3.id]}
         response = self.client.put(url, data=payload, format='json')
-        print(response.data, 11111111111111)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.item1.refresh_from_db()
         self.assertEqual(self.item1.name, 'Phone')

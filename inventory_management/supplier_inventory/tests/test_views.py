@@ -79,8 +79,8 @@ class ItemViewTests(TestCase):
                 self.supplier1.id]}
         response = self.client.post(url, data=payload, format='json')
         self.assertIn('Item_id', response.data)
-        self.assertIn('bike', response.data)
-        self.assertIn('23232', response.data)
+        self.assertIn('bike', response.data.get('Item_info'))
+        self.assertIn('23232', response.data.get('Item_info'))
 
     def test_create_item_missing_suppliers(self):
         url = reverse('add_item')

@@ -78,6 +78,7 @@ class ApiMethodMixin:
             id__in=object_ids).count() == len(object_ids)
 
 
+
 class ItemView(APIView, ApiMethodMixin):
     """
     Handles GET, POST, PUT, and DELETE requests for item details
@@ -150,7 +151,7 @@ class ItemView(APIView, ApiMethodMixin):
         item = Item.objects.create(
             name=name, description=description, price=price)
         item.suppliers.add(*suppliers_ids)
-        return Response(f'Item_id: {item.id}, {str(item)}', 201)
+        return Response({'Item_id': {item.id}, 'Item_info': str(item)}, 201)
 
     @handle_exceptions
     def put(self, request: HttpRequest, item_id: str) -> Response:
@@ -173,7 +174,7 @@ class ItemView(APIView, ApiMethodMixin):
             return Response(result, 400)
 
         item.save()
-        return Response(f'items_id: {item.id}, {str(item)} updated')
+        return Response({'items_id': {item.id}, 'Item_info': str(item)})
 
     @handle_exceptions
     def delete(self, request: HttpRequest, item_id: str) -> Response:

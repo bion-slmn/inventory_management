@@ -5,6 +5,21 @@ from rest_framework import status
 
 
 def handle_exceptions(view_func):
+    """
+    Handles exceptions that may occur in the decorated 
+    view function.
+
+    Args:
+        view_func: The view function to be wrapped.
+
+    Returns:
+        Response: Returns a response with an error message
+          and appropriate status code in case of exceptions.
+
+    Raises:
+        None
+    """
+
     @wraps(view_func)
     def _wrapped_view(*args, **kwargs):
         try:
